@@ -6,7 +6,9 @@ using Domain;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Persistance;
 
 namespace Application.Account.Commands
 {
@@ -44,7 +46,9 @@ namespace Application.Account.Commands
 
             public async Task<Result<UserDto>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var user = await _userManager.FindByEmailAsync(request.loginDto.Email);
+                var user = await _userManager.Users
+                    .Include(x => x.Photos)
+                    .FirstOrDefaultAsync(x => x.Email == request.loginDto.Email);
 
                 if (user == null)
                 {
