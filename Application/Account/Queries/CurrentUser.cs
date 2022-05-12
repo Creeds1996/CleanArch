@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Account.Queries
@@ -33,7 +34,9 @@ namespace Application.Account.Queries
 
             public async Task<Result<UserDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var user = await _userManager.FindByEmailAsync(request.Email);
+                var user = await _userManager.Users
+                    .Include(p => p.Photos)
+                    .FirstOrDefaultAsync(x => x.Email == request.Email);
 
                 if (user == null)
                 {
