@@ -31,7 +31,6 @@ namespace Application.Profiles.Queries
                     .ProjectTo<Dtos.Profile>(_mapper.ConfigurationProvider)
                     .SingleOrDefaultAsync(x => x.Username == request.Username);
 
-
                 return Result<Dtos.Profile>.Success(user);
             }
         }
