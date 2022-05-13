@@ -3,6 +3,7 @@ using Application.Activities.Dtos;
 using Application.Services;
 using AutoMapper;
 using Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Core
 {
@@ -22,6 +23,8 @@ namespace Application.Core
                 .ForMember(d => d.Image, o => o.MapFrom(s => s.AppUser.Photos.FirstOrDefault(x => x.IsMain).Url));
             CreateMap<AppUser, Profiles.Dtos.Profile>()
                 .ForMember(d => d.Image, o => o.MapFrom(s => s.Photos.FirstOrDefault(x => x.IsMain).Url));
+            CreateMap<IdentityRole, string>()
+                .ConvertUsing(r => r.Name);
         }
     }
 }
