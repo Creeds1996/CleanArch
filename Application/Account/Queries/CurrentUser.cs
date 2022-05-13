@@ -45,7 +45,7 @@ namespace Application.Account.Queries
                 }
 
                 var res = _mapper.Map<UserDto>(user);
-                res.Token = _tokenService.CreateToken(user);
+                res.Token = await _tokenService.CreateToken(user);
                 return Result<UserDto>.Success(res);
             }
         }

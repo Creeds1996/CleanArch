@@ -8,7 +8,6 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Persistance;
 
 namespace Application.Account.Commands
 {
@@ -62,7 +61,7 @@ namespace Application.Account.Commands
                 {
                     _logger.LogInformation("{User} has logged in.", user.DisplayName);
                     var res = _mapper.Map<UserDto>(user);
-                    res.Token = _tokenService.CreateToken(user);
+                    res.Token = await _tokenService.CreateToken(user);
                     return Result<UserDto>.Success(res);
                 }
 
