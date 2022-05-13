@@ -16,7 +16,7 @@ namespace Persistence
                 var roles = new List<IdentityRole>();
 
                 // Get all valid roles from Roles enum
-                foreach (var role in Enum.GetNames(typeof(Roles)))
+                foreach (var role in Enum.GetNames(typeof(UserRoles)))
                 {
                     roles.Add(new IdentityRole(role));
                 }
@@ -58,11 +58,11 @@ namespace Persistence
                     
                     if (user.UserName == "bob")
                     {
-                        await userManager.AddToRoleAsync(user, nameof(Roles.Admin));
+                        await userManager.AddToRoleAsync(user, nameof(UserRoles.Admin));
                     } 
                     else
                     {
-                        await userManager.AddToRoleAsync(user, nameof(Roles.User));
+                        await userManager.AddToRoleAsync(user, nameof(UserRoles.User));
                     }
                 }
 
