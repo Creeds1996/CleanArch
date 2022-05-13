@@ -17,14 +17,6 @@ namespace Application.Account.Commands
             public RegisterDto registerDto { get; set; }
         }
 
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-                RuleFor(x => x.registerDto).SetValidator(new RegisterValidator());
-            }
-        }
-
         public class Handler : IRequestHandler<Command, Result<UserDto>>
         {
             private ILogger<Login> _logger;

@@ -18,14 +18,6 @@ namespace Application.Account.Commands
             public LoginDto loginDto { get; set; }
         }
 
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-                RuleFor(x => x.loginDto).SetValidator(new LoginValidator());
-            }
-        }
-
         public class Handler : IRequestHandler<Command, Result<UserDto>>
         {
             private ILogger<Login> _logger;

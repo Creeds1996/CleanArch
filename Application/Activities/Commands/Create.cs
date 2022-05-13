@@ -16,14 +16,6 @@ namespace Application.Activities.Commands
             public Activity Activity { get; set; }
         }
 
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-                RuleFor(x => x.Activity).SetValidator(new ActivityValidator());
-            }
-        }
-
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;
