@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using Persistance;
 
@@ -7,10 +8,26 @@ namespace Persistence
     public class Seed
     {
         public static async Task SeedData(DataContext context,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            if (!userManager.Users.Any() && !context.Activities.Any())
+            if (!userManager.Users.Any() && !context.Activities.Any() && !context.Roles.Any())
             {
+                // Generate an empty list of roles
+                var roles = new List<IdentityRole>();
+
+                // Get all valid roles from Roles enum
+                foreach (var role in Enum.GetNames(typeof(Roles)))
+                {
+                    roles.Add(new IdentityRole(role));
+                }
+
+                // Add all roles to the DB
+                foreach (var role in roles)
+                {
+                    await roleManager.CreateAsync(role);
+                }
+
+                // Seed default users into the DB
                 var users = new List<AppUser>
                 {
                     new AppUser
@@ -33,11 +50,23 @@ namespace Persistence
                     },
                 };
 
+                // Create each user and then give all users but bob the user role.
+                // Bob is the default admin user.
                 foreach (var user in users)
                 {
                     await userManager.CreateAsync(user, "Pa$$w0rd");
+                    
+                    if (user.UserName == "bob")
+                    {
+                        await userManager.AddToRoleAsync(user, nameof(Roles.Admin));
+                    } 
+                    else
+                    {
+                        await userManager.AddToRoleAsync(user, nameof(Roles.User));
+                    }
                 }
 
+                // Default activities
                 var activities = new List<Activity>
                 {
                     new Activity
@@ -252,6 +281,7 @@ namespace Persistence
                     }
                 };
 
+                // Add Activities to the DB and save.
                 await context.Activities.AddRangeAsync(activities);
                 await context.SaveChangesAsync();
             }
