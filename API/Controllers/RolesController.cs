@@ -15,6 +15,12 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new List.Query { }));
         }
 
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetRoles(string username)
+        {
+            return HandleResult(await Mediator.Send(new Details.Query { Username = username }));
+        }
+
         [HttpPost("add")]
         public async Task<IActionResult> AddRole(UpdateRole addRole)
         {
